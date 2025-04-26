@@ -2,14 +2,14 @@ import requests
 import sys
 import json
 
-def apicall(word: str):
-    response=json.loads(requests.get("https://api.urbandictionary.com/v0/define?term="+word).content)["list"]
+def apicall(word: str, url: str="https://api.urbandictionary.com/v0/define?term="):
+    response=json.loads(requests.get(url+word).content)["list"]
     i=1
     for meaning in response:
         print(str(i)+". result:")
         i+=1
-        print("definiton:",meaning["definition"])
-        print("example:",meaning["example"])
+        print("definiton:",meaning["definition"].replace("[","").replace("]",""))
+        print("example:",meaning["example"].replace("[","").replace("]",""))
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
@@ -21,9 +21,5 @@ if __name__ == "__main__":
         print("phrase:"," ".join(sys.argv[1:]))
         apicall(phrase)
     else:
-        x=json.loads(requests.get("https://api.urbandictionary.com/v0/random").content)
-        for entry in x["list"]:
-            print(f"word: {entry['word']}")
-            print(f"meaning: {entry['definition']}")
-            print(f"example: {entry['example']}")
-            print("-" * 30)
+        print("random results:")
+        apicall("","https://api.urbandictionary.com/v0/random")
